@@ -4,7 +4,7 @@
   "description": "Full Stack Open 2020",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "for i in $(ls **/*.puml); do file=${i%.puml}; puml generate -s -o $file.svg $file.puml; done"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/KaceCottam/fullstackopen2020/issues"
   },
-  "homepage": "https://github.com/KaceCottam/fullstackopen2020#readme"
+  "homepage": "https://github.com/KaceCottam/fullstackopen2020#readme",
+  "devDependencies": {
+    "node-plantuml": "^0.9.0"
+  }
 }
