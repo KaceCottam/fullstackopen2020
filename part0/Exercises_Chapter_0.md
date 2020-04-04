@@ -1,6 +1,7 @@
 Exercise 0.4
 ===
-![](sequence.svg)
+![](sequence1.svg)
 
 Exercise 0-5
 ===
+![](sequence2.svg)
