@@ -4,4 +4,8 @@ Exercise 0.4
 
 Exercise 0-5
 ===
+![](sequence3.svg)
+
+Exercise 0-6
+===
 ![](sequence2.svg)
