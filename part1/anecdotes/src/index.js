@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Anecdote = props => (
+  <div>
+    <p>{props.anecdotes[props.selected]}</p>
+    <p>has {props.votes[props.selected]} votes</p>
+  </div>
+)
+
+
 const App = ({anecdotes}) => {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
@@ -15,16 +23,21 @@ const App = ({anecdotes}) => {
     setVotes(newVotes)
   }
 
+  const maxIndex = arr => arr.indexOf(Math.max(...arr))
+  const mostVoteIdx = maxIndex(votes)
+
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {votes[selected]} votes</p>
+      <h1>Anecdote of the day</h1>
+      <Anecdote anecdotes={anecdotes} selected={selected} votes={votes} />
       <button onClick={incVote}>
         vote
       </button>
       <button onClick={getNext}>
         next anecdote
       </button>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote anecdotes={anecdotes} selected={mostVoteIdx} votes={votes} />
     </div>
   )
 }
