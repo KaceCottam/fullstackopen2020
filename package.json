@@ -18,5 +18,8 @@
   "homepage": "https://github.com/KaceCottam/fullstackopen2020#readme",
   "devDependencies": {
     "node-plantuml": "^0.9.0"
+  },
+  "dependencies": {
+    "create-react-app": "^3.4.1"
   }
 }
