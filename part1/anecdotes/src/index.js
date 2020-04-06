@@ -18,9 +18,7 @@ const App = ({anecdotes}) => {
   }
 
   const incVote = () => {
-    let newVotes = [...votes]
-    newVotes[selected] += 1
-    setVotes(newVotes)
+    setVotes(votes.map((value, i) => value + (i == selected ? 1 : 0)))
   }
 
   const maxIndex = arr => arr.indexOf(Math.max(...arr))
