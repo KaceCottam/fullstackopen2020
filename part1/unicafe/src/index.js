@@ -10,6 +10,15 @@ const IncrementButton = ({text, state, stateFn}) => (
 )
 
 const Statistics = ({good, neutral, bad}) => {
+  if([good, neutral, bad].reduce((x,y) => x + y) === 0) {
+    return (
+      <div>
+        <h1>statistics</h1>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+
   const all = good + neutral + bad
   const average = (good - bad) / all
   const positive = good / all * 100
