@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 
 const AdditionForm = ({ persons, setPersons }) => {
   const [ newName, setNewName ] = useState('')
@@ -10,15 +11,22 @@ const AdditionForm = ({ persons, setPersons }) => {
   const addPerson = event => {
     event.preventDefault()
 
-    const newPerson = { name: newName, number: newNumber }
+    const newPerson = { name: newName
+      , number: newNumber
+      , id: (persons.length + 1)
+    }
 
     if(persons.filter(({ name }) => name === newName).length !== 0) {
       alert(`${newName} is already added to the phonebook`)
     } else {
-      setPersons(persons.concat(newPerson))
+      axios
+        .post(`http://localhost:3001/persons`, newPerson)
+        .then(response=> {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   return (
