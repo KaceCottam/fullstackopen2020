@@ -8,19 +8,17 @@ function App() {
 
   const onChangeFilter = event => { setFilter(event.target.value) }
 
-  const hook = () => {
+  const filteredCountries = countries.filter(
+    ({name}) => name.toUpperCase().includes(countryFilter.toUpperCase())
+  )
+
+  useEffect(() => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
         setCountries(response.data)
       })
-  }
-
-  const filteredCountries = countries.filter(
-    ({name}) => name.toUpperCase().includes(countryFilter.toUpperCase())
-  )
-
-  useEffect(hook, [])
+  }, [])
 
   return (
     <div>
