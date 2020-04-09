@@ -13,11 +13,30 @@ const AdditionForm = ({ persons, setPersons }) => {
 
     const newPerson = { name: newName
       , number: newNumber
-      , id: (persons.length + 1)
+      , id: (persons.length)
     }
 
-    if(persons.filter(({ name }) => name === newName).length !== 0) {
-      alert(`${newName} is already added to the phonebook`)
+    const filteredPersons = persons.filter(({ name }) => name === newName)
+
+    if(filteredPersons.length !== 0) {
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        networker
+          .change(filteredPersons[0].id, newPerson)
+          .then(r => {
+            setPersons(
+              persons.map(
+                p => p.name !== newPerson.name
+                  ? p
+                  : { ...p, number: newPerson.number }
+              )
+            )
+            setNewName('')
+            setNewNumber('')
+          })
+      } else {
+        setNewName('')
+        setNewNumber('')
+      }
     } else {
       networker
         .create(newPerson)
