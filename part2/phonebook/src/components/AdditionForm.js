@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import networker from '../service/networker'
 
 const AdditionForm = ({ persons, setPersons }) => {
   const [ newName, setNewName ] = useState('')
@@ -19,10 +19,10 @@ const AdditionForm = ({ persons, setPersons }) => {
     if(persons.filter(({ name }) => name === newName).length !== 0) {
       alert(`${newName} is already added to the phonebook`)
     } else {
-      axios
-        .post(`http://localhost:3001/persons`, newPerson)
-        .then(response=> {
-          setPersons(persons.concat(response.data))
+      networker
+        .create(newPerson)
+        .then(newPersonData => {
+          setPersons(persons.concat(newPersonData))
           setNewName('')
           setNewNumber('')
         })

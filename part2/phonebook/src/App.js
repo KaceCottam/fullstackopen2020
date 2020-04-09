@@ -2,20 +2,17 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import AdditionForm from './components/AdditionForm'
 import Render from './components/Render'
-import axios from 'axios'
+import networker from './service/networker'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newFilter, setNewFilter ] = useState('')
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-          setPersons(response.data)
-        })
+    networker
+      .getAll()
+      .then(personData => setPersons(personData))
   }
-
 
   useEffect(hook, [])
 
