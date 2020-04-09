@@ -16,11 +16,26 @@ const App = () => {
 
   useEffect(hook, [])
 
+  const buttonCreation = (id, name) => {
+    const onDelete = () => {
+      if(window.confirm(`Are you sure you want to delete ${name}?`)) {
+        networker
+          .deleteID(id)
+          .then(personData => {
+            setPersons(persons.filter(p => p.id !== id))
+          })
+      }
+    }
+
+    return (<button onClick={onDelete}>delete</button>)
+  }
+
   return (
     <div>
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <AdditionForm persons={persons} setPersons={setPersons} />
-      <Render persons={persons} newFilter={newFilter} />
+      <Render persons={persons} newFilter={newFilter}
+        buttonCreation={buttonCreation} />
     </div>
   )
 }
