@@ -1,0 +1,27 @@
+{
+  "name": "part3",
+  "version": "1.0.0",
+  "description": "part3 of fullstackopen2020",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaceCottam/fullstackopen2020.git"
+  },
+  "author": "Kace Cottam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KaceCottam/fullstackopen2020/issues"
+  },
+  "homepage": "https://github.com/KaceCottam/fullstackopen2020#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
