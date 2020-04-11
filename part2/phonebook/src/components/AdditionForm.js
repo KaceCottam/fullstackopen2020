@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import networker from '../service/networker'
 
-const AdditionForm = ({ persons, setPersons }) => {
+const AdditionForm = ({ persons, setPersons, setNotification }) => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
@@ -11,10 +11,7 @@ const AdditionForm = ({ persons, setPersons }) => {
   const addPerson = event => {
     event.preventDefault()
 
-    const newPerson = { name: newName
-      , number: newNumber
-      , id: (persons.length)
-    }
+    const newPerson = { name: newName, number: newNumber }
 
     const filteredPersons = persons.filter(({ name }) => name === newName)
 
@@ -32,6 +29,8 @@ const AdditionForm = ({ persons, setPersons }) => {
             )
             setNewName('')
             setNewNumber('')
+            setNotification(`Changed number of ${newName} to ${newNumber}`)
+            setTimeout(() => setNotification(null), 5000)
           })
       } else {
         setNewName('')
@@ -44,6 +43,8 @@ const AdditionForm = ({ persons, setPersons }) => {
           setPersons(persons.concat(newPersonData))
           setNewName('')
           setNewNumber('')
+          setNotification(`Added ${newName}`)
+          setTimeout(() => setNotification(null), 5000)
         })
     }
   }

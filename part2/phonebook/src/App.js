@@ -3,10 +3,17 @@ import Filter from './components/Filter'
 import AdditionForm from './components/AdditionForm'
 import Render from './components/Render'
 import networker from './service/networker'
+import makeNotifyComponent from './components/notification'
+import './index.css'
+
+const ErrorNotification = makeNotifyComponent('error')
+const Notification = makeNotifyComponent('notify')
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newFilter, setNewFilter ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState(null)
+  const [ notification, setNotification ] = useState(null)
 
   const hook = () => {
     networker
@@ -32,8 +39,11 @@ const App = () => {
 
   return (
     <div>
+      <ErrorNotification message={errorMessage} />
+      <Notification message={notification} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
-      <AdditionForm persons={persons} setPersons={setPersons} />
+      <AdditionForm persons={persons} setPersons={setPersons} 
+         setNotification={setNotification} />
       <Render persons={persons} newFilter={newFilter}
         buttonCreation={buttonCreation} />
     </div>
