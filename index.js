@@ -80,8 +80,8 @@ app.post(`/api/persons/`, (req, res) => {
     return res.status(404).json({ error: 'content missing' })
   }
   if (persons.find(p => p.name === body.name)) {
-    console.log(`POST /api/persons/ 204 "name must be unique"`)
-    return res.status(404).json({ error: 'name must be unique' })
+    console.log(`POST /api/persons/ 412 "name must be unique"`)
+    return res.status(412).json({ error: 'name must be unique' })
   }
 
   const person = {
