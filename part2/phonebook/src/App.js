@@ -31,6 +31,11 @@ const App = () => {
           .then(personData => {
             setPersons(persons.filter(p => p.id !== id))
           })
+          .catch(error => {
+            setErrorMessage(`Information of ${name} has already been removed from the server`)
+            setTimeout(() => setErrorMessage(''), 5000)
+            setPersons(persons.filter(p => p.id !== id))
+          })
       }
     }
 
@@ -43,7 +48,7 @@ const App = () => {
       <Notification message={notification} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <AdditionForm persons={persons} setPersons={setPersons} 
-         setNotification={setNotification} />
+         setNotification={setNotification} setErrorMessage={setErrorMessage} />
       <Render persons={persons} newFilter={newFilter}
         buttonCreation={buttonCreation} />
     </div>

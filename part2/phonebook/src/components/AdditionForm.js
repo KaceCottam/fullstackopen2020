@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import networker from '../service/networker'
 
-const AdditionForm = ({ persons, setPersons, setNotification }) => {
+const AdditionForm = ({ persons, setPersons, setNotification, setErrorMessage }) => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
@@ -31,6 +31,11 @@ const AdditionForm = ({ persons, setPersons, setNotification }) => {
             setNewNumber('')
             setNotification(`Changed number of ${newName} to ${newNumber}`)
             setTimeout(() => setNotification(null), 5000)
+          })
+          .catch(error => {
+            setErrorMessage(`Information of ${newName} has already been removed from the server`)
+            setTimeout(() => setErrorMessage(''), 5000)
+            setPersons(persons.filter(p => p.name !== newName))
           })
       } else {
         setNewName('')
