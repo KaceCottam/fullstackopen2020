@@ -1,25 +1,39 @@
 {
-  "name": "fullstackopen2020",
-  "version": "1.0.0",
-  "description": "Full Stack Open 2020",
-  "main": "index.js",
-  "scripts": {
-    "test": "for i in $(ls **/*.puml); do file=${i%.puml}; puml generate -s -o $file.svg $file.puml; done"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KaceCottam/fullstackopen2020.git"
-  },
-  "author": "Kace Cottam",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/KaceCottam/fullstackopen2020/issues"
-  },
-  "homepage": "https://github.com/KaceCottam/fullstackopen2020#readme",
-  "devDependencies": {
-    "node-plantuml": "^0.9.0"
-  },
+  "name": "phonebook",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "create-react-app": "^3.4.1"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1"
+  },
+  "devDependencies": {
+    "json-server": "^0.16.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "json-server -p3001 --watch db.json"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
