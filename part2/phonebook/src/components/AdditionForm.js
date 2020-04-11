@@ -34,7 +34,7 @@ const AdditionForm = ({ persons, setPersons, setNotification, setErrorMessage })
           })
           .catch(error => {
             setErrorMessage(`Information of ${newName} has already been removed from the server`)
-            setTimeout(() => setErrorMessage(''), 5000)
+            setTimeout(() => setErrorMessage(), 5000)
             setPersons(persons.filter(p => p.name !== newName))
           })
       } else {
