@@ -8,58 +8,59 @@ const Header = () => (<h1>Phonebook</h1>)
 const Footer = () => null
 
 const App = () => {
-  const [ state, setState ] = useState({
-    persons: [],
-    filter: '',
-    notify: null
-  })
-
-  const setFilter = value => setState({ ...state, filter: value })
-  const setPersons = value => setState({ ...state, persons: value })
-  const setNotify = type => content => {
-    setState({ ...state, notify: { type, content } })
-    setTimeout(() => setState({ ...state, notify: null }), 5000)
+  const [ persons, setPersons ] = useState([])
+  const [ filter, setFilter ] = useState('')
+  const [ notification, setNotification ] = useState(null)
+  const doNotify = type => content => {
+    setNotification({ type, content })
+    setTimeout(() => setNotification(null), 5000)
   }
 
-  const notify = setNotify('notification')
-  const error = setNotify('error')
+  const notify = doNotify('good')
+  const error = doNotify('error')
 
-  useEffect(() => Networker.getAll().then(persons => setState(
-    { ...state, persons: persons })))
-
-  const confirmOverride = name =>
-    window.confirm(`${name} is already added to phonebook,` +
-      ' replace the old number with a new one?')
-
+  useEffect(() => {
+    Networker.getAll()
+      .then(persons => setPersons(persons))
+      .catch(_ => error('couldnt get persons'))
+  })
 
 
   const addPerson = (person, resetForm) => event => {
     event.preventDefault()
 
-    const notifyReset = content => resetAnd(() => notify(content))
-    const errorReset = content => resetAnd(() => error(content))
+    const confirmOverride = name =>
+      window.confirm(`${name} is already added to phonebook,` +
+        ' replace the old number with a new one?')
 
-    const similarPerson = state.persons.find(p => p.name === person.name)
-    const resetAnd = predicate => { predicate(); resetForm() }
-    const modifyPersons = b => a => a.id === b.id ? a : b
-    const changePerson  = person => confirmOverride()
-      ? resetAnd(() => setPersons(state.persons.map(modifyPersons(person))))
-      : resetForm()
+    const existingPerson = persons.find(p => p.name === person.name)
 
-    return similarPerson
-      ? changePerson(similarPerson)
-      : resetAnd(() => {
-          setPersons(state.persons.concat(person))
-          Networker.create(person)
+    if (!existingPerson) {
+      Networker.create(person).then(newPerson => {
+        setPersons(persons.concat(newPerson))
+        notify(`${person.name} added to phonebook`)
+        resetForm()
+      })
+
+    } else if (confirmOverride(person.name)) {
+      Networker.change(existingPerson.id,
+        { ...existingPerson, number: person.number }).then(changedPerson => {
+          setPersons(persons.map(p => p.id === changedPerson.id ? changedPerson : p))
+          notify(`${changedPerson.name}'s phonenumber changed to ${changedPerson.number}'`)
+          resetForm()
         })
-  }
+    } else {
+      error(`${person.name} already exists!`)
+      resetForm()
+    }
 
+  }
 
   return (
     <div>
       <Header />
-      <Notification message={state.notify} />
-      <Filter filter={state.filter} setFilter={setFilter} />
+      <Notification message={notify} />
+      <Filter filter={filter} setFilter={setFilter} />
       <AdditionForm addPerson={addPerson} />
       <Footer />
     </div>

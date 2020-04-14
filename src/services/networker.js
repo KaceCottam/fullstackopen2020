@@ -1,8 +1,16 @@
 import axios from 'axios'
-const baseURL = 'http://localhost:3001/persons'
+
+const DATA_PORT = Number(process.env.DATA_PORT) || 3001
+
+const baseURL = `http://localhost:${DATA_PORT}/persons`
 
 const getAll = () => {
   const request = axios.get(baseURL)
+  return request.then(response => response.data)
+}
+
+const get = (url) => {
+  const request = axios.get(`${baseURL}/${url}`)
   return request.then(response => response.data)
 }
 
