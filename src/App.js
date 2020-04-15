@@ -1,68 +1,84 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from'react'
 import Networker from './services/networker'
-import Notification from './components/notification'
-import Filter from './components/filter'
-import AdditionForm from './components/additionForm'
-
-const Header = () => (<h1>Phonebook</h1>)
-const Footer = () => null
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
-  const [ filter, setFilter ] = useState('')
+  const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
   const [ notification, setNotification ] = useState(null)
-  const doNotify = type => content => {
-    setNotification({ type, content })
-    setTimeout(() => setNotification(null), 5000)
+  const [ filter, setFilter ] = useState('')
+
+  useEffect( () => {
+    Networker.getAll().then(persons => setPersons(persons))
+  }, [])
+
+  const resetNewPerson = () => setNewPerson({ name: '', number: '' })
+
+  const doNotify = style => content => {
+    setTimeout(() => { setNotification(null) }, 5000)
+    setNotification(<p style={style}>{content}</p>)
   }
+  const notify = doNotify({ color: "green" })
+  const error = doNotify({ color: "red" })
 
-  const notify = doNotify('good')
-  const error = doNotify('error')
-
-  useEffect(() => {
-    Networker.getAll()
-      .then(persons => setPersons(persons))
-      .catch(_ => error('couldnt get persons'))
-  })
-
-
-  const addPerson = (person, resetForm) => event => {
+  const onSubmit = event => {
     event.preventDefault()
 
-    const confirmOverride = name =>
-      window.confirm(`${name} is already added to phonebook,` +
-        ' replace the old number with a new one?')
+    const existingPerson = persons.find(({ name }) => name === newPerson.name)
 
-    const existingPerson = persons.find(p => p.name === person.name)
+    const replacePerson = ep =>
+      window.confirm(`Do you want to replace ${ep.name}'s phone number ` +
+        `with ${newPerson.number}?`)
 
     if (!existingPerson) {
-      Networker.create(person).then(newPerson => {
-        setPersons(persons.concat(newPerson))
-        notify(`${person.name} added to phonebook`)
-        resetForm()
+      Networker.create(newPerson).then(newPerson => {
+        setPersons( persons.concat(newPerson) )
+        notify(`Added ${newPerson.name} to the phone book!`)
+        resetNewPerson()
       })
-
-    } else if (confirmOverride(person.name)) {
-      Networker.change(existingPerson.id,
-        { ...existingPerson, number: person.number }).then(changedPerson => {
-          setPersons(persons.map(p => p.id === changedPerson.id ? changedPerson : p))
-          notify(`${changedPerson.name}'s phonenumber changed to ${changedPerson.number}'`)
-          resetForm()
-        })
+    } else if (replacePerson(existingPerson)) {
+      Networker.update(existingPerson.id, newPerson).then(newPerson => {
+        setPersons( persons.map(p => p === existingPerson
+          ? newPerson
+          : existingPerson) )
+        notify(`Changed ${newPerson.name}'s number to ${newPerson.number}!`)
+        resetNewPerson()
+      })
     } else {
-      error(`${person.name} already exists!`)
-      resetForm()
+      error(`${newPerson.name} already exists!`)
+      resetNewPerson()
     }
-
   }
+
+  const setName = content => setNewPerson({ ...newPerson, name: content })
+  const setNumber = content => setNewPerson({ ...newPerson, number: content })
+  const onChangeGenerator = fn => event => fn(event.target.value)
 
   return (
     <div>
-      <Header />
-      <Notification message={notify} />
-      <Filter filter={filter} setFilter={setFilter} />
-      <AdditionForm addPerson={addPerson} />
-      <Footer />
+      <div>
+        <label htmlFor="filter">filter:</label>
+        <input id="filter" value={filter}
+          onChange={onChangeGenerator(setFilter)}/>
+      </div>
+      <h2>Phonebook</h2>
+      {notification}
+      <form onSubmit={onSubmit}>
+        <div>
+          <label htmlFor='name'>name:</label>
+          <input id='name' value={newPerson.name}
+            onChange={onChangeGenerator(setName)} /><br />
+          <label htmlFor='number'>number:</label>
+          <input id='number' value={newPerson.number}
+            onChange={onChangeGenerator(setNumber)} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      { persons
+        .filter(({name}) => name.toUpperCase().includes(filter.toUpperCase()))
+        .map((p, idx) => (<p key={idx}>{p.name} {p.number}</p>)) }
     </div>
   )
 }
