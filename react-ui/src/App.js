@@ -39,7 +39,7 @@ const App = () => {
       Networker.update(existingPerson.id, newPerson).then(newPerson => {
         setPersons( persons.map(p => p === existingPerson
           ? newPerson
-          : existingPerson) )
+          : p) )
         notify(`Changed ${newPerson.name}'s number to ${newPerson.number}!`)
         resetNewPerson()
       })

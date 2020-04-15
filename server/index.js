@@ -9,6 +9,16 @@ morgan.token('data', (req, _) => req.body !== undefined
   ? JSON.stringify(req.body)
   : '')
 
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return res.status(400).json({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
 const app = express()
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')))
 app.use(express.json())
@@ -23,11 +33,17 @@ app.get('/persons/', (_, res) => {
     .then(persons => res.json(persons))
 })
 
-app.get('/persons/:id', (req, res) => {
+app.get('/persons/:id', (req, res, next) => {
   Person
-   .findById(req.params.id)
-   .then(person => person.toJSON())
-   .then(person => res.json(person))
+    .findById(req.params.id)
+    .then(person => {
+      if (person) {
+        res.json(person.toJSON())
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.get('/info/', (_, res) => {
@@ -50,23 +66,24 @@ app.post('/persons/', (req, res) => {
     .then(person => res.status(201).json(person))
 })
 
-app.delete('/persons/:id', (req, res) => {
-  const id = req.params.id
-
+app.delete('/persons/:id', (req, res, next) => {
   Person
-    .findByIdAndDelete(id)
+    .findByIdAndRemove(req.params.id)
     .then(_ => res.status(204).end())
+    .catch(error => next(error))
 })
 
-app.put('/persons/:id', (req, res) => {
+app.put('/persons/:id', (req, res, next) => {
   const id = req.params.id
   const { name, number } = req.body
 
   Person
-    .findByIdAndUpdate(id, { name, number })
-    .then(person => person.toJSON())
-    .then(person => res.status(201).json(person))
+    .findByIdAndUpdate(id, { name, number }, { new: true })
+    .then(person => res.status(201).json(person.toJSON()))
+    .catch(error => next(error))
 })
+
+app.use(errorHandler)
 
 const PORT = Number(process.env.PORT) + 1 || 4000
 app.listen(PORT, () => {
