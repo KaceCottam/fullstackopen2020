@@ -1,8 +1,7 @@
 import axios from 'axios'
 require('dotenv').config()
 
-const PORT = Number(process.env.PORT) + 1 || 4001
-const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}/persons`
+const BASE_URL = process.env.BASE_URL || `/persons`
 
 const getAll = () => axios.get(BASE_URL).then(res => res.data)
 const create = (obj) => axios.post(BASE_URL, obj).then(res => res.data)

@@ -53,6 +53,8 @@ const App = () => {
   const setNumber = content => setNewPerson({ ...newPerson, number: content })
   const onChangeGenerator = fn => event => fn(event.target.value)
 
+  const shouldDisable = () => newPerson.name === '' || newPerson.number === ''
+
   return (
     <div>
       <div>
@@ -72,7 +74,7 @@ const App = () => {
             onChange={onChangeGenerator(setNumber)} />
         </div>
         <div>
-          <button type="submit">add</button>
+          <button disabled={shouldDisable()} type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
