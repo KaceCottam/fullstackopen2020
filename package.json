@@ -4,20 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server",
+    "build": "cd react-ui/ && npm install && npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KaceCottam/fullstackopen2020.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/KaceCottam/fullstackopen2020/issues"
   },
   "homepage": "https://github.com/KaceCottam/fullstackopen2020#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0"
   }
