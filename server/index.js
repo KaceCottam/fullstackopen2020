@@ -5,15 +5,19 @@ const cors = require('cors')
 const path = require('path')
 const Person = require('./models/person')
 
-morgan.token('data', (req, _) => req.body !== undefined
-  ? JSON.stringify(req.body)
-  : '')
+morgan.token('data', (req, _) => {
+  const stringData = JSON.stringify(req.body)
 
-const errorHandler = (error, req, res, next) => {
+  return stringData === '{}' ? '' : stringData
+})
+
+const errorHandler = (error, _, res, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
     return res.status(400).json({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message })
   }
 
   next(error)
@@ -26,11 +30,12 @@ app.use(morgan(':method :url :status :res[content-length] -' +
   ' :response-time ms :data'))
 app.use(cors())
 
-app.get('/persons/', (_, res) => {
+app.get('/persons/', (_, res, next) => {
   Person
     .find({})
     .then(persons => persons.map(p => p.toJSON()))
     .then(persons => res.json(persons))
+    .catch(error => next(error))
 })
 
 app.get('/persons/:id', (req, res, next) => {
@@ -51,7 +56,7 @@ app.get('/info/', (_, res) => {
     `<p>${new Date()}</p>`)
 })
 
-app.post('/persons/', (req, res) => {
+app.post('/persons/', (req, res, next) => {
   const { name, number } = req.body
 
   if (!name || !number) {
@@ -64,6 +69,7 @@ app.post('/persons/', (req, res) => {
     .save()
     .then(person => person.toJSON())
     .then(person => res.status(201).json(person))
+    .catch(error => next(error))
 })
 
 app.delete('/persons/:id', (req, res, next) => {

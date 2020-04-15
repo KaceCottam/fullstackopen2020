@@ -30,19 +30,25 @@ const App = () => {
         `with ${newPerson.number}?`)
 
     if (!existingPerson) {
-      Networker.create(newPerson).then(newPerson => {
-        setPersons( persons.concat(newPerson) )
-        notify(`Added ${newPerson.name} to the phone book!`)
-        resetNewPerson()
-      })
+      Networker
+        .create(newPerson)
+        .then(newPerson => {
+          setPersons( persons.concat(newPerson) )
+          notify(`Added ${newPerson.name} to the phone book!`)
+          resetNewPerson()
+        })
+        .catch(({ response }) => error(response.data.error))
     } else if (replacePerson(existingPerson)) {
-      Networker.update(existingPerson.id, newPerson).then(newPerson => {
-        setPersons( persons.map(p => p === existingPerson
-          ? newPerson
-          : p) )
-        notify(`Changed ${newPerson.name}'s number to ${newPerson.number}!`)
-        resetNewPerson()
-      })
+      Networker
+        .update(existingPerson.id, newPerson)
+        .then(newPerson => {
+          setPersons( persons.map(p => p === existingPerson
+            ? newPerson
+            : p) )
+          notify(`Changed ${newPerson.name}'s number to ${newPerson.number}!`)
+          resetNewPerson()
+        })
+        .catch(({ response }) => error(response.data.error))
     } else {
       error(`${newPerson.name} already exists!`)
       resetNewPerson()
