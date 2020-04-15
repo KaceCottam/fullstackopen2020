@@ -55,6 +55,21 @@ const App = () => {
 
   const shouldDisable = () => newPerson.name === '' || newPerson.number === ''
 
+  const doDelete = person => () => {
+    Networker.delete(person.id).then(_ => {
+      notify(`Removed ${person.name} from the phonebook.`)
+      setPersons( persons.filter(p => p.id !== person.id) )
+    })
+  }
+
+  const personsDiv = persons
+    .filter(({name}) => name.toUpperCase().includes(filter.toUpperCase()))
+    .map((p, idx) => (
+      <p key={idx}>
+        {p.name} {p.number} <button onClick={doDelete(p)}>delete</button>
+      </p>
+    ))
+
   return (
     <div>
       <div>
@@ -78,9 +93,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      { persons
-        .filter(({name}) => name.toUpperCase().includes(filter.toUpperCase()))
-        .map((p, idx) => (<p key={idx}>{p.name} {p.number}</p>)) }
+      { personsDiv }
     </div>
   )
 }
