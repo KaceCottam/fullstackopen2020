@@ -1,4 +1,5 @@
 import axios from 'axios'
+require('dotenv').config()
 
 const PORT = Number(process.env.PORT) + 1 || 4001
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}/persons`
