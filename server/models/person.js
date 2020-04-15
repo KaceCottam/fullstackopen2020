@@ -8,11 +8,11 @@ require('dotenv').config()
 
 const url = process.env.MONGODB_URI
 
-console.log(`connecting to`, url)
+console.log('connecting to', url)
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(_ => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch(error => {

@@ -5,7 +5,7 @@ const cors = require('cors')
 const path = require('path')
 const Person = require('./models/person')
 
-morgan.token('data', (req, _) => {
+morgan.token('data', (req) => {
   const stringData = JSON.stringify(req.body)
 
   return stringData === '{}' ? '' : stringData
@@ -75,7 +75,7 @@ app.post('/persons/', (req, res, next) => {
 app.delete('/persons/:id', (req, res, next) => {
   Person
     .findByIdAndRemove(req.params.id)
-    .then(_ => res.status(204).end())
+    .then(() => res.status(204).end())
     .catch(error => next(error))
 })
 
